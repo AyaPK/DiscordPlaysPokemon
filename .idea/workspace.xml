@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="877e06c5-7f39-4ccf-a48e-63b72967f92f" name="Changes" comment="Initial Commit">
+      <change afterPath="$PROJECT_DIR$/.env_template" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bot/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/bot/discord_bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +39,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.discord_bot.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -42,6 +49,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aya-s\PycharmProjects\DiscordPlaysPokemon" />
       <recent name="C:\Users\aya-s\PycharmProjects\DiscordPlaysPokemon\src" />
       <recent name="C:\Users\aya-s\PycharmProjects\DiscordPlaysPokemon\src\discordplayspokemon" />
     </key>
