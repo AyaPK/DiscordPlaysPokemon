@@ -28,7 +28,30 @@ def create_bot() -> discord.Client:
         elif message.content.startswith('$tick'):
             pyboy_tick()
             await send_screenshot(message.channel)
-
+        elif message.content.startswith('$a'):
+            pyboy_tick(button="a")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$b'):
+            pyboy_tick(button="b")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$up'):
+            pyboy_tick(button="up")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$down'):
+            pyboy_tick(button="down")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$left'):
+            pyboy_tick(button="left")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$right'):
+            pyboy_tick(button="right")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$start'):
+            pyboy_tick(button="start")
+            await send_screenshot(message.channel)
+        elif message.content.startswith('$select'):
+            pyboy_tick(button="select")
+            await send_screenshot(message.channel)
 
     return client
 
