@@ -3,6 +3,18 @@ import os
 import discord
 from dotenv import load_dotenv
 from integration.pyboy_integration import pyboy_tick
+import json
+
+REACTION_EMOJIS = {
+    "arrow_up": "⬆️",
+    "arrow_down": "⬇️",
+    "arrow_left": "⬅️",
+    "arrow_right": "➡️",
+    "a": "🅰️",
+    "b": "🅱️",
+    "start": "▶️",
+    "select": "📋",
+}
 
 DISCORD_TOKEN = None
 
@@ -59,5 +71,22 @@ def create_bot() -> discord.Client:
 async def send_screenshot(channel):
     file = discord.File("data/image.png", filename="image.png")
     embed = discord.Embed()
-    embed.set_image(url="attachment://file.png")
+    embed.set_image(url="attachment://image.png")
     await channel.send(file=file, embed=embed)
+
+    valid_reactions = json.loads(
+        os.getenv("VALID_REACTIONS", "[]")
+    )
+
+    reaction_message = await channel.send(
+        "React to select the next input"
+    )
+
+    for reaction in valid_reactions:
+        emoji = REACTION_EMOJIS.get(reaction)
+
+        if emoji is None:
+            print(f"Unknown reaction: {reaction}")
+            continue
+
+        await reaction_message.add_reaction(emoji)
