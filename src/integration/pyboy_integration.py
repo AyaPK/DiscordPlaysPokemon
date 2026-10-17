@@ -1,7 +1,10 @@
 from pyboy import PyBoy
+import logging
+
+logging.getLogger("pyboy.pyboy").setLevel(logging.ERROR)
 
 def save_initial_state():
-    with PyBoy("data/blue.gb", window="null", cgb=True) as pyboy, open(
+    with PyBoy("data/blue.gb", window="null", cgb=True, log_level="ERROR") as pyboy, open(
         "data/state_file.state", "wb"
     ) as f:
         pyboy.save_state(f)
@@ -10,7 +13,7 @@ def save_initial_state():
 def pyboy_tick(button=""):
     valid_buttons = ["a", "b", "up", "down", "left", "right", "start", "select"]
 
-    pyboy = PyBoy("data/blue.gb", window="null", cgb=True)
+    pyboy = PyBoy("data/blue.gb", window="null", cgb=True, log_level="ERROR")
     pyboy.set_emulation_speed(100)
     try:
         with open("data/state_file.state", "rb") as f:
