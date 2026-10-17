@@ -292,3 +292,4 @@ pyrightconfig.json
 *.pkl
 *.png
 *.csv
+messages.json

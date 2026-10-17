@@ -53,6 +53,7 @@ class InputButton(discord.ui.Button):
 
         pyboy_tick(button=self.input_name)
         await send_screenshot(self.channel)
+        log_input(interaction)
 
 
 class InputView(discord.ui.View):
@@ -128,3 +129,6 @@ async def send_screenshot(channel):
 
     latest_screenshot_messages[channel.id] = message
     save_message_ids()
+
+def log_input(interaction: discord.Interaction):
+    print(interaction.user.id)
