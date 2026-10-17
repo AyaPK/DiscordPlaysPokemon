@@ -5,18 +5,65 @@ from dotenv import load_dotenv
 from integration.pyboy_integration import pyboy_tick
 import json
 
-REACTION_EMOJIS = {
-    "arrow_up": "⬆️",
-    "arrow_down": "⬇️",
-    "arrow_left": "⬅️",
-    "arrow_right": "➡️",
-    "a": "🅰️",
-    "b": "🅱️",
-    "start": "▶️",
-    "select": "📋",
+BUTTON_LABELS = {
+    "arrow_up": ("↑", "up"),
+    "arrow_down": ("↓", "down"),
+    "arrow_left": ("←", "left"),
+    "arrow_right": ("→", "right"),
+    "a": ("A", "a"),
+    "b": ("B", "b"),
+    "start": ("Start", "start"),
+    "select": ("Select", "select"),
 }
 
 DISCORD_TOKEN = None
+latest_screenshot_messages = {}
+
+
+class InputButton(discord.ui.Button):
+    def __init__(
+        self,
+        label: str,
+        input_name: str,
+        channel: discord.abc.Messageable,
+        style: discord.ButtonStyle,
+    ):
+        super().__init__(label=label, style=style)
+        self.input_name = input_name
+        self.channel = channel
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+        pyboy_tick(button=self.input_name)
+        await send_screenshot(self.channel)
+
+
+class InputView(discord.ui.View):
+    def __init__(self, channel: discord.abc.Messageable):
+        super().__init__(timeout=None)
+
+        valid_reactions = json.loads(
+            os.getenv("VALID_REACTIONS", "[]")
+        )
+
+        for reaction in valid_reactions:
+            if reaction not in BUTTON_LABELS:
+                continue
+
+            label, input_name = BUTTON_LABELS[reaction]
+
+            style = (
+                discord.ButtonStyle.primary
+                if input_name in ("up", "down", "left", "right")
+                else discord.ButtonStyle.secondary
+            )
+
+            self.add_item(
+                InputButton(label, input_name, channel, style)
+            )
+
+
 
 def create_bot() -> discord.Client:
     load_dotenv()
@@ -35,58 +82,23 @@ def create_bot() -> discord.Client:
         if message.author == client.user:
             return
 
-        if message.content.startswith('$hello'):
-            await message.channel.send('Hello!')
         elif message.content.startswith('$tick'):
             pyboy_tick()
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$a'):
-            pyboy_tick(button="a")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$b'):
-            pyboy_tick(button="b")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$up'):
-            pyboy_tick(button="up")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$down'):
-            pyboy_tick(button="down")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$left'):
-            pyboy_tick(button="left")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$right'):
-            pyboy_tick(button="right")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$start'):
-            pyboy_tick(button="start")
-            await send_screenshot(message.channel)
-        elif message.content.startswith('$select'):
-            pyboy_tick(button="select")
             await send_screenshot(message.channel)
 
     return client
 
 
+
 async def send_screenshot(channel):
-    file = discord.File("data/image.png", filename="image.png")
-    embed = discord.Embed()
-    embed.set_image(url="attachment://image.png")
-    await channel.send(file=file, embed=embed)
+    previous_message = latest_screenshot_messages.get(channel.id)
 
-    valid_reactions = json.loads(
-        os.getenv("VALID_REACTIONS", "[]")
+    if previous_message is not None:
+        await previous_message.edit(view=None)
+
+    message = await channel.send(
+        file=discord.File("data/image.png"),
+        view=InputView(channel),
     )
 
-    reaction_message = await channel.send(
-        "React to select the next input"
-    )
-
-    for reaction in valid_reactions:
-        emoji = REACTION_EMOJIS.get(reaction)
-
-        if emoji is None:
-            print(f"Unknown reaction: {reaction}")
-            continue
-
-        await reaction_message.add_reaction(emoji)
+    latest_screenshot_messages[channel.id] = message
