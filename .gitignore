@@ -293,3 +293,4 @@ pyrightconfig.json
 *.png
 *.csv
 messages.json
+inputs.json

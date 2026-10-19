@@ -3,8 +3,14 @@ import os
 
 def set_up_data():
     check_for_messages_json()
+    check_for_inputs_json()
 
 def check_for_messages_json():
     if not os.path.isfile('src/state/messages.json'):
         with open('src/state/messages.json', 'w') as file:
+            json.dump({}, file)
+
+def check_for_inputs_json():
+    if not os.path.isfile('src/state/inputs.json'):
+        with open('src/state/inputs.json', 'w') as file:
             json.dump({}, file)
