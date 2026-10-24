@@ -294,3 +294,5 @@ pyrightconfig.json
 *.csv
 messages.json
 inputs.json
+inputs.txt
+votes.json

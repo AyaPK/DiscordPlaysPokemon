@@ -6,6 +6,7 @@ import random
 import discord
 from dotenv import load_dotenv
 from integration.pyboy_integration import pyboy_tick
+from state.state_manager import record_input, record_votes
 
 BUTTON_LABELS = {
     "arrow_up": ("↑", "up", 0),
@@ -132,6 +133,12 @@ class InputView(discord.ui.View):
         await asyncio.sleep(VOTE_DURATION)
 
         winner = self._tally_winner()
+
+        all_voters = [uid for item in self.children
+                      if isinstance(item, InputButton)
+                      for uid in item.voters]
+        record_votes(all_voters)
+
         self.voting_active = False
 
         global current_votes
@@ -148,6 +155,7 @@ class InputView(discord.ui.View):
             pass
 
         if winner:
+            record_input(winner)
             pyboy_tick(button=winner)
             await send_screenshot(self.channel)
         else:
