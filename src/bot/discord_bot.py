@@ -159,6 +159,7 @@ class InputView(discord.ui.View):
             pyboy_tick(button=winner)
             await send_screenshot(self.channel)
         else:
+            record_input('null')
             try:
                 await message.edit(content="No votes were cast.", view=self)
             except discord.HTTPException:
@@ -203,9 +204,22 @@ def create_bot() -> discord.Client:
         if message.author == client.user:
             return
 
-        elif message.content.startswith('$tick'):
-            pyboy_tick()
-            await send_screenshot(message.channel)
+        if message.content.startswith('$'):
+            try:
+                await message.delete()
+            except discord.HTTPException:
+                pass
+
+            admin_ids = {
+                int(i) for i in os.getenv("ADMIN_IDS", "").split(",") if i.strip()
+            }
+            if message.author.id not in admin_ids:
+                return
+
+            if message.content.startswith('$tick'):
+                record_input('null')
+                pyboy_tick()
+                await send_screenshot(message.channel)
 
     return client
 
